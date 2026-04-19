@@ -1,313 +1,328 @@
-# SVG2IMG — SVG to Image Converter
+<div align="center">
 
-> Convert SVG files to PNG, JPG, or WebP with configurable scale and quality. Bilingual (Chinese/English). Zero server upload — all processing happens in your browser.
+<img src="astro-site/public/favicon.svg" alt="SVG2IMG" width="80" height="80" />
 
-**Live:** https://svg2img.bult.dev
+# SVG2IMG
+
+**Convert SVG to PNG / JPG / WebP — instantly, privately, in your browser.**
+
+[![Deploy](https://github.com/qiaoqiaobby/svg2img/actions/workflows/deploy.yml/badge.svg)](https://github.com/qiaoqiaobby/svg2img/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-f97316.svg)](LICENSE)
+[![Astro](https://img.shields.io/badge/Astro-6-bc52ee.svg)](https://astro.build/)
+[![Vue](https://img.shields.io/badge/Vue-3-42b883.svg)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178c6.svg)](https://www.typescriptlang.org/)
+[![Tests](https://img.shields.io/badge/Tests-50%20passed-22c55e.svg)](#testing)
+
+<br />
+
+[**Live Demo**](https://svg2img.bult.dev) · [Report Bug](https://github.com/qiaoqiaobby/svg2img/issues) · [Request Feature](https://github.com/qiaoqiaobby/svg2img/issues)
+
+<br />
+
+<img src="https://img.shields.io/badge/Zero%20Server%20Upload-All%20Client--Side-f97316?style=for-the-badge" alt="Zero Server Upload" />
+
+</div>
+
+---
+
+## Why SVG2IMG?
+
+Most SVG converters upload your files to a server. **SVG2IMG doesn't.** Every conversion happens entirely in your browser via Canvas 2D API — your SVGs never leave your device.
 
 ---
 
 ## Features
 
-- **Format conversion** — SVG to PNG / JPG / WebP
-- **Scale control** — 1x, 1.5x, 2x, 2.5x, 3x output
-- **Quality slider** — 1–100% for JPG/WebP
-- **Multiple input methods** — file upload, drag-and-drop, paste SVG code
-- **Clipboard copy** — one-click copy to clipboard
-- **Bilingual UI** — Chinese (default) / English, auto-detected by browser language
-- **Dark mode** — follows system preference
-- **XSS protection** — SVG sanitization removes script tags and 39+ dangerous event handlers
-- **Privacy** — no server upload, all conversion runs client-side via Canvas API
+<table>
+<tr>
+<td width="50%">
+
+### Core Conversion
+- **3 output formats** — PNG (lossless), JPG, WebP
+- **5 scale presets** — 1x, 1.5x, 2x, 2.5x, 3x
+- **Quality control** — 1–100% slider for JPG/WebP
+- **Batch-ready filename** — `{name}-{scale}x.{format}`
+
+</td>
+<td width="50%">
+
+### Input Methods
+- **File upload** — click to browse
+- **Drag & drop** — visual drop zone with feedback
+- **Paste SVG code** — auto-detects clipboard content
+- **Clipboard copy** — one-click output to clipboard
+
+</td>
+</tr>
+<tr>
+<td>
+
+### User Experience
+- **Dark / Light mode** — toggle or follow system
+- **Bilingual** — Chinese & English, auto-detected
+- **4-step progress** — Upload → Settings → Preview → Export
+- **Responsive** — mobile, tablet, desktop
+
+</td>
+<td>
+
+### Security & Privacy
+- **Zero upload** — all processing client-side
+- **XSS sanitization** — 39+ dangerous attributes stripped
+- **CSP headers** — strict Content-Security-Policy
+- **No tracking** — no analytics, no cookies
+
+</td>
+</tr>
+</table>
+
+---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | [Astro 6](https://astro.build/) (Static Site Generation) |
-| Interactive UI | [Vue 3](https://vuejs.org/) (Island Architecture, `client:visible`) |
-| Language | TypeScript (strict mode) |
-| Testing | [Vitest](https://vitest.dev/) + jsdom |
-| Styling | Vanilla CSS with CSS Custom Properties (no Tailwind) |
-| Deployment | [Cloudflare Pages](https://pages.cloudflare.com/) |
-
-## Project Structure
-
 ```
-astro-site/
-├── public/
-│   ├── _headers          # Cloudflare security headers (CSP, cache)
-│   ├── _redirects        # URL redirects (/zh → /zh/)
-│   ├── robots.txt        # SEO robots + sitemap
-│   ├── favicon.svg
-│   └── icons/
-├── src/
-│   ├── pages/
-│   │   ├── index.astro       # Root — auto-redirect by browser language
-│   │   ├── zh/index.astro    # Chinese page
-│   │   ├── en/index.astro    # English page
-│   │   └── 404.astro         # Not found
-│   ├── layouts/
-│   │   └── BaseLayout.astro  # SEO meta, OG, JSON-LD, hreflang
-│   ├── components/
-│   │   ├── Hero.astro
-│   │   ├── Faq.astro         # FAQ with JSON-LD FAQPage
-│   │   ├── Footer.astro
-│   │   ├── LangSwitcher.astro
-│   │   └── converter/
-│   │       ├── Converter.vue     # Main orchestrator + error boundary
-│   │       ├── UploadPanel.vue   # File upload / drag-drop / paste
-│   │       ├── SettingsPanel.vue # Scale, format, quality controls
-│   │       ├── PreviewPanel.vue  # Output preview + download/copy
-│   │       ├── PasteDialog.vue   # SVG code paste dialog
-│   │       └── useConverter.ts   # Composition API state management
-│   ├── lib/
-│   │   ├── svgParser.ts          # SVG parsing, XSS detection, validation
-│   │   ├── canvasRenderer.ts     # Canvas rendering, sanitization, export
-│   │   ├── fileUtils.ts          # Download + clipboard utilities
-│   │   ├── animations.ts         # Ripple effect
-│   │   └── __tests__/            # 50 unit tests
-│   ├── i18n/
-│   │   ├── types.ts     # Translation interface (60+ keys)
-│   │   ├── zh.ts        # Chinese translations
-│   │   ├── en.ts        # English translations
-│   │   └── index.ts     # t(lang) helper
-│   └── styles/
-│       ├── globals.css      # Design system (CSS variables, components)
-│       └── animations.css   # Animations (glow, ripple, stagger, reveal)
-├── package.json
-├── astro.config.mjs
-├── tsconfig.json
-├── vitest.config.ts
-├── .editorconfig
-└── CONTRIBUTING.md
+┌─────────────────────────────────────────────────────────┐
+│                    Cloudflare Pages                       │
+│              Global CDN + Auto SSL + Headers              │
+├─────────────────────────────────────────────────────────┤
+│  Astro 6 (SSG)                                           │
+│  ├── Pages        → Static HTML (zh / en / 404)          │
+│  ├── Layout       → SEO meta, JSON-LD, OG, hreflang     │
+│  └── Vue 3 Island → Interactive converter (client:visible)│
+├─────────────────────────────────────────────────────────┤
+│  TypeScript (strict)                                     │
+│  ├── svgParser    → DOMParser + XSS detection            │
+│  ├── canvasRenderer → Canvas 2D + sanitization           │
+│  └── fileUtils    → Download + Clipboard API             │
+├─────────────────────────────────────────────────────────┤
+│  Vitest (50 tests) │ CSS Variables │ EditorConfig        │
+└─────────────────────────────────────────────────────────┘
 ```
+
+---
 
 ## Quick Start
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) 22.12.0 or higher
-- npm (comes with Node.js)
+- **Node.js** ≥ 22.12.0
+- **npm** (comes with Node.js)
 
-### Local Development
+### Development
 
 ```bash
-# Clone the repo
 git clone https://github.com/qiaoqiaobby/svg2img.git
 cd svg2img/astro-site
-
-# Install dependencies
 npm install
-
-# Start dev server
-npm run dev
-# → http://localhost:4321
-
-# Run tests
-npm test
-
-# Production build
-npm run build
-
-# Preview production build
-npm run preview
+npm run dev        # → http://localhost:4321
 ```
 
-### Available Commands
+### Commands
 
-| Command | Description |
+| Command | What it does |
 |---------|-------------|
-| `npm run dev` | Start dev server at `localhost:4321` |
+| `npm run dev` | Dev server with HMR |
 | `npm run build` | Production build → `dist/` |
-| `npm run preview` | Preview production build locally |
-| `npm test` | Run 50 unit tests (Vitest) |
-| `npm run test:watch` | Run tests in watch mode |
+| `npm run preview` | Preview production locally |
+| `npm test` | Run 50 unit tests |
+| `npm run test:watch` | Tests in watch mode |
 
 ---
 
-## Deployment to Cloudflare Pages
+## CI/CD: Auto Deploy Pipeline
 
-There are two deployment methods: **Wrangler CLI** (recommended for quick setup) and **GitHub integration** (recommended for continuous deployment).
+Every push to `main` triggers the full pipeline via **GitHub Actions**:
 
-### Method 1: Wrangler CLI (Manual Deploy)
+```
+git push origin main
+       │
+       ▼
+┌──────────────┐     ┌──────────────┐     ┌──────────────────────┐
+│   Checkout    │────▶│  npm test    │────▶│  npm run build       │
+│   + Node 22  │     │  (50 tests)  │     │  (Astro SSG → dist/) │
+└──────────────┘     └──────────────┘     └──────────┬───────────┘
+                                                      │
+                                                      ▼
+                                          ┌──────────────────────┐
+                                          │  wrangler pages      │
+                                          │  deploy → Cloudflare │
+                                          │  Pages CDN           │
+                                          └──────────────────────┘
+                                                      │
+                                                      ▼
+                                               svg2img.bult.dev
+```
 
-Suitable for quick one-off deployments or initial setup.
+- **Push to `main`** → production deploy
+- **Pull Request** → tests only (no deploy)
 
-#### Step 1: Install Wrangler
+### First-Time Setup
+
+<details>
+<summary><b>1. Create Cloudflare Pages project</b></summary>
 
 ```bash
-npm install -g wrangler
-# or use npx (no install needed)
+npx wrangler login
+npx wrangler pages project create svg2img --production-branch=main
 ```
 
-#### Step 2: Login to Cloudflare
+</details>
 
-```bash
-wrangler login
-# This opens a browser window for authentication
-```
+<details>
+<summary><b>2. Add GitHub Secrets</b></summary>
 
-#### Step 3: Create the Pages project (first time only)
+Go to **Settings → Secrets and variables → Actions → New repository secret**:
 
-```bash
-wrangler pages project create svg2img --production-branch=main
-```
+| Secret | Where to find it |
+|--------|-----------------|
+| `CLOUDFLARE_API_TOKEN` | [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens) → Create Token → **Edit Cloudflare Workers** template |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Dashboard URL: `dash.cloudflare.com/<THIS_IS_YOUR_ID>` |
 
-#### Step 4: Build and deploy
+</details>
 
-```bash
-cd astro-site
-npm run build
-wrangler pages deploy dist/ --project-name=svg2img
-```
+<details>
+<summary><b>3. Custom domain (optional)</b></summary>
 
-You'll see output like:
+In Cloudflare Dashboard → **Workers & Pages** → **svg2img** → **Custom domains**:
 
 ```
-Uploading... (15/15)
-✨ Success! Uploaded 15 files
-✨ Deployment complete! Take a peek over at https://xxxxxxxx.svg2img.pages.dev
-```
-
-The site is now live at `https://svg2img.pages.dev`.
-
----
-
-### Method 2: GitHub Integration (Auto Deploy on Push)
-
-Suitable for continuous deployment — every push to `main` triggers a new build.
-
-#### Step 1: Push code to GitHub
-
-```bash
-git remote add origin https://github.com/YOUR_USERNAME/svg2img.git
-git push -u origin main
-```
-
-#### Step 2: Connect to Cloudflare Pages
-
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. Select your GitHub repository `svg2img`
-3. Configure build settings:
-
-| Setting | Value |
-|---------|-------|
-| Production branch | `main` |
-| Build command | `cd astro-site && npm install && npm run build` |
-| Build output directory | `astro-site/dist` |
-
-4. Add environment variable:
-
-| Variable | Value |
-|----------|-------|
-| `NODE_VERSION` | `22` |
-
-5. Click **Save and Deploy**
-
-#### Step 3: Verify
-
-After the first build completes (usually 1–2 minutes), your site is live at:
-
-```
-https://svg2img.pages.dev
-```
-
-#### Auto Deploy Workflow
-
-After GitHub integration is set up, the workflow is simply:
-
-```bash
-# Make changes
-git add .
-git commit -m "feat: add new feature"
-git push
-
-# Cloudflare Pages automatically:
-# 1. Detects the push
-# 2. Runs: cd astro-site && npm install && npm run build
-# 3. Deploys astro-site/dist/ to the CDN
-# 4. Updates https://svg2img.pages.dev (and custom domain)
-```
-
-Every push to `main` → production deployment.
-Every push to other branches → preview deployment at `https://<branch>.svg2img.pages.dev`.
-
----
-
-### Custom Domain Setup
-
-To use a custom domain like `svg2img.bult.dev`:
-
-1. In Cloudflare Dashboard → **Workers & Pages** → **svg2img** → **Custom domains**
-2. Click **Set up a custom domain**
-3. Enter your domain: `svg2img.bult.dev`
-4. If the domain's DNS is already on Cloudflare, the CNAME record is auto-configured
-5. If not, add a CNAME record manually:
-
-```
-Type: CNAME
-Name: svg2img
+Type:   CNAME
+Name:   svg2img
 Target: svg2img.pages.dev
-Proxy: Yes (orange cloud)
+Proxy:  Yes (orange cloud)
 ```
 
-SSL certificate is automatically provisioned by Cloudflare.
+SSL is automatically provisioned.
+
+</details>
+
+---
+
+## Project Structure
+
+```
+svg2img/
+├── .github/workflows/
+│   └── deploy.yml              # CI/CD pipeline
+├── astro-site/
+│   ├── public/
+│   │   ├── _headers            # Cloudflare security headers (CSP)
+│   │   ├── _redirects          # /zh → /zh/, /en → /en/
+│   │   └── robots.txt          # SEO + sitemap
+│   ├── src/
+│   │   ├── pages/              # SSG routes (zh, en, 404)
+│   │   ├── layouts/            # BaseLayout (SEO, JSON-LD, OG)
+│   │   ├── components/
+│   │   │   ├── Hero.astro      # Header + theme toggle + GitHub link
+│   │   │   ├── Faq.astro       # FAQ with JSON-LD FAQPage
+│   │   │   └── converter/      # Vue 3 interactive island
+│   │   │       ├── Converter.vue       # Orchestrator + error boundary
+│   │   │       ├── UploadPanel.vue     # Upload / drag-drop / paste
+│   │   │       ├── SettingsPanel.vue   # Scale, format, quality
+│   │   │       ├── PreviewPanel.vue    # Preview + download + copy
+│   │   │       └── useConverter.ts     # Composition API composable
+│   │   ├── lib/                # Pure business logic
+│   │   │   ├── svgParser.ts            # Parse + XSS detect + validate
+│   │   │   ├── canvasRenderer.ts       # Canvas render + sanitize
+│   │   │   ├── fileUtils.ts            # Download + clipboard
+│   │   │   └── __tests__/              # 50 unit tests
+│   │   ├── i18n/               # zh.ts + en.ts + types.ts
+│   │   └── styles/             # globals.css + animations.css
+│   ├── astro.config.mjs
+│   ├── vitest.config.ts
+│   ├── CONTRIBUTING.md
+│   └── .editorconfig
+├── CLAUDE.md                   # AI assistant context
+└── README.md
+```
 
 ---
 
 ## Security
 
-### SVG Sanitization
+### SVG Sanitization Pipeline
 
-All SVG input is processed through two layers of protection:
-
-1. **`containsJavascriptCode()`** — rejects SVGs containing:
-   - `javascript:` URIs
-   - `<script>` tags
-   - Event handlers (`onerror=`, `onload=`, `onclick=`, etc.)
-   - `eval()` calls
-
-2. **`sanitizeSvgContent()`** — strips from SVG before Canvas rendering:
-   - All `<script>` tags
-   - 39+ dangerous event handler attributes (onload, onerror, onclick, ondrag, onmouse*, etc.)
+```
+User Input (SVG file / pasted code)
+       │
+       ▼
+┌─────────────────────────┐
+│ containsJavascriptCode()│  Reject: javascript:, <script>,
+│                         │  onerror=, onload=, eval(), ...
+└────────────┬────────────┘
+             │ pass
+             ▼
+┌─────────────────────────┐
+│ sanitizeSvgContent()    │  Strip: 39+ event handlers,
+│                         │  all <script> tags
+└────────────┬────────────┘
+             │ clean
+             ▼
+┌─────────────────────────┐
+│ Canvas 2D Rendering     │  Safe data URL output
+└─────────────────────────┘
+```
 
 ### HTTP Security Headers
 
-Configured via `public/_headers` for Cloudflare Pages:
-
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline';
-  style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;
-  connect-src 'self'; font-src 'self'; object-src 'none'
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: camera=(), microphone=(), geolocation=()
+Content-Security-Policy:  default-src 'self'; img-src 'self' data: blob:; object-src 'none'
+X-Content-Type-Options:   nosniff
+X-Frame-Options:          DENY
+Referrer-Policy:          strict-origin-when-cross-origin
+Permissions-Policy:       camera=(), microphone=(), geolocation=()
 ```
 
-### Privacy
-
-- **Zero server uploads** — all SVG processing happens in the browser via Canvas 2D API
-- **No tracking** — no analytics SDKs, no cookies (unless Cloudflare Analytics is enabled at the infrastructure level)
-- **Data URL encoding** — images are generated as data URLs, not uploaded anywhere
+---
 
 ## SEO
 
-- **JSON-LD** structured data: `WebApplication` + `FAQPage` schemas
-- **Open Graph** + **Twitter Card** meta tags
-- **hreflang** alternate links for zh/en
-- **Canonical URLs** on all pages
-- **Auto-generated sitemap** at `/sitemap-index.xml`
-- **robots.txt** with sitemap reference
+| Feature | Implementation |
+|---------|---------------|
+| Structured data | JSON-LD `WebApplication` + `FAQPage` |
+| Social sharing | Open Graph + Twitter Card |
+| i18n SEO | `hreflang` alternates (zh, en, x-default) |
+| Canonical URLs | All pages |
+| Sitemap | Auto-generated at `/sitemap-index.xml` |
+| Robots | `robots.txt` with sitemap reference |
+
+---
+
+## Testing
+
+```bash
+cd astro-site && npm test
+```
+
+```
+ ✓ src/lib/__tests__/svgParser.test.ts        (33 tests)
+ ✓ src/lib/__tests__/canvasRenderer.test.ts    (12 tests)
+ ✓ src/lib/__tests__/fileUtils.test.ts          (5 tests)
+
+ Test Files  3 passed (3)
+      Tests  50 passed (50)
+```
+
+Coverage focuses on security-critical paths: XSS detection, attribute sanitization, dimension parsing, format conversion.
+
+---
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
-- Architecture overview
-- Code style guide
-- Security checklist
-- Testing instructions
-- Commit conventions
+See [CONTRIBUTING.md](astro-site/CONTRIBUTING.md) for architecture overview, code style guide, security checklist, and commit conventions.
+
+---
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+---
+
+<div align="center">
+
+Made with [Astro](https://astro.build/) + [Vue](https://vuejs.org/) + [Cloudflare Pages](https://pages.cloudflare.com/)
+
+[Live Demo](https://svg2img.bult.dev) · [GitHub](https://github.com/qiaoqiaobby/svg2img)
+
+</div>
