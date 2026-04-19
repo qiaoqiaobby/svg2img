@@ -489,7 +489,7 @@ body {
 
 /* ======================== 暗色模式适配 ======================== */
 @media (prefers-color-scheme: dark) {
-  body {
+  body:not([data-theme="light"] body) {
     background:
       linear-gradient(135deg,
         rgba(249, 115, 22, 0.06) 0%,
@@ -499,7 +499,7 @@ body {
     background-size: 200% 200%;
   }
 
-  .mouse-glow {
+  :root:not([data-theme="light"]) .mouse-glow {
     background: radial-gradient(
       600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
       rgba(249, 115, 22, 0.07) 0%,
@@ -507,19 +507,54 @@ body {
     );
   }
 
-  .btn-ripple {
+  :root:not([data-theme="light"]) .btn-ripple {
     background: rgba(255, 255, 255, 0.12);
   }
 
-  .step.active {
+  :root:not([data-theme="light"]) .step.active {
     box-shadow: var(--shadow-primary), 0 0 0 4px var(--color-primary-glow);
   }
 
-  .upload-container.drag-over {
+  :root:not([data-theme="light"]) .upload-container.drag-over {
     background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(30, 41, 59, 0.9) 100%);
   }
 
-  .upload-container:hover {
+  :root:not([data-theme="light"]) .upload-container:hover {
     box-shadow: var(--shadow-md), 0 0 0 1px rgba(249, 115, 22, 0.1);
   }
+}
+
+/* 手动暗色模式动画适配 */
+[data-theme="dark"] body {
+  background:
+    linear-gradient(135deg,
+      rgba(249, 115, 22, 0.06) 0%,
+      rgba(15, 23, 42, 1) 40%,
+      rgba(59, 130, 246, 0.04) 100%
+    );
+  background-size: 200% 200%;
+}
+
+[data-theme="dark"] .mouse-glow {
+  background: radial-gradient(
+    600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(249, 115, 22, 0.07) 0%,
+    transparent 60%
+  );
+}
+
+[data-theme="dark"] .btn-ripple {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .step.active {
+  box-shadow: var(--shadow-primary), 0 0 0 4px var(--color-primary-glow);
+}
+
+[data-theme="dark"] .upload-container.drag-over {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(30, 41, 59, 0.9) 100%);
+}
+
+[data-theme="dark"] .upload-container:hover {
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(249, 115, 22, 0.1);
 }

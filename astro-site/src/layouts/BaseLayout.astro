@@ -42,6 +42,16 @@ const enUrl = new URL('/en/', Astro.site);
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
 
+  <!-- Theme: prevent FOUC -->
+  <script is:inline>
+    (function() {
+      var theme = localStorage.getItem('svg2img_theme');
+      if (theme === 'dark' || theme === 'light') {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    })();
+  </script>
+
   <!-- JSON-LD: WebApplication -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
@@ -61,6 +71,30 @@ const enUrl = new URL('/en/', Astro.site);
   <slot />
 
   <script>
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        let next: string;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          // No manual override yet — toggle opposite of system
+          next = systemDark ? 'light' : 'dark';
+        }
+
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('svg2img_theme', next);
+      });
+    }
+
+    // Mouse glow
     const glow = document.getElementById('mouse-glow');
     if (glow) {
       let raf: number | null = null;
