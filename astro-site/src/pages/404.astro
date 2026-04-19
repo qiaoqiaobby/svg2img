@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const lang = 'zh' as const;
+---
+
+<BaseLayout lang={lang} title="404 - 页面不存在" description="页面未找到">
+  <div class="container" style="text-align: center; padding-top: 80px; padding-bottom: 80px;">
+    <h1 style="font-size: 4rem; margin-bottom: 1rem; background: linear-gradient(135deg, #f97316, #ea580c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">404</h1>
+    <p style="color: var(--color-text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+      页面不存在 · Page not found
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="/zh/" style="display: inline-flex; align-items: center; padding: 10px 24px; border-radius: 12px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; font-weight: 600; text-decoration: none;">
+        中文首页
+      </a>
+      <a href="/en/" style="display: inline-flex; align-items: center; padding: 10px 24px; border-radius: 12px; border: 1.5px solid rgba(249,115,22,0.4); color: #f97316; font-weight: 600; text-decoration: none;">
+        English
+      </a>
+    </div>
+  </div>
+</BaseLayout>

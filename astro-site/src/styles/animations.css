@@ -1,0 +1,525 @@
+/* ======================== 动画基础设施 ======================== */
+:root {
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.3, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ======================== 1. 页面入场 Stagger 动画 ======================== */
+.animate-entry {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: entrySlideUp 0.6s var(--ease-out-back) forwards;
+  animation-delay: calc(var(--entry-order, 0) * 0.1s + 0.15s);
+}
+
+@keyframes entrySlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================== 2. 步骤指示器动态过渡 ======================== */
+.step {
+  transition: all 0.35s var(--ease-spring);
+}
+
+.step.active {
+  transform: scale(1.1);
+}
+
+.step.completed {
+  background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%);
+  border-color: var(--color-success);
+  color: white;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+}
+
+/* 步骤激活弹跳 */
+.step.step-bounce {
+  animation: stepBounce 0.5s var(--ease-spring);
+}
+
+@keyframes stepBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1.12); }
+}
+
+/* 步骤完成对勾 */
+.step.completed::before {
+  content: '✓';
+  position: absolute;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: checkDraw 0.3s var(--ease-smooth) forwards;
+}
+
+@keyframes checkDraw {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 进度线填充效果 */
+.step-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: var(--spacing-sm);
+  width: var(--progress, 0%);
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
+  transform: translateY(-50%);
+  z-index: 0;
+  transition: width 0.5s var(--ease-smooth);
+  border-radius: 2px;
+}
+
+/* ======================== 3. 上传区域交互增强 ======================== */
+.upload-container.drag-over {
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(255, 237, 213, 0.5) 0%, rgba(255,255,255,0.9) 100%);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-primary-lg), inset 0 0 0 1px var(--color-primary-glow);
+}
+
+/* 文件落入涟漪效果 */
+.upload-container.drop-ripple {
+  animation: dropRipple 0.6s var(--ease-smooth);
+}
+
+@keyframes dropRipple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(249, 115, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+/* 上传图标悬停动画 */
+.upload-icon {
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.upload-container:hover .upload-icon {
+  transform: translateY(-4px) scale(1.08);
+}
+
+/* 粘贴区域滑入 */
+.paste-container.paste-slide-in {
+  animation: pasteSlideIn 0.35s var(--ease-out-back) forwards;
+}
+
+@keyframes pasteSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================== 4. 预览"显影"效果 ======================== */
+.preview-container.reveal-active,
+.preview-area.reveal-active {
+  animation: revealFadeIn 0.8s var(--ease-smooth) forwards;
+}
+
+.preview-area.reveal-active .image-preview {
+  animation: previewReveal 0.9s var(--ease-smooth) forwards;
+}
+
+.preview-area.reveal-active .preview-image {
+  animation: imageReveal 1s var(--ease-smooth) 0.1s both;
+}
+
+@keyframes revealFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes previewReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes imageReveal {
+  0% {
+    filter: blur(12px) saturate(0.3);
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  40% {
+    filter: blur(6px) saturate(0.7);
+    opacity: 0.7;
+    clip-path: inset(0 0 40% 0);
+  }
+  100% {
+    filter: blur(0) saturate(1);
+    opacity: 1;
+    clip-path: inset(0 0 0% 0);
+  }
+}
+
+/* ======================== 5. 按钮微交互 ======================== */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.btn.primary:hover:not(:disabled) {
+  box-shadow: var(--shadow-primary-lg);
+}
+
+.btn.secondary:hover:not(:disabled) {
+  box-shadow: var(--shadow-primary);
+}
+
+.btn:disabled {
+  transition: all 0.3s var(--ease-smooth);
+}
+
+/* 按钮涟漪 */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  animation: rippleExpand 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 按钮成功闪动 */
+.btn.btn-success-flash {
+  animation: successFlash 1.2s var(--ease-smooth);
+}
+
+@keyframes successFlash {
+  0% { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%); }
+  20% { background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%); box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4); }
+  80% { background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%); }
+  100% { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%); }
+}
+
+.btn.secondary.btn-success-flash {
+  animation: successFlashSecondary 1.2s var(--ease-smooth);
+}
+
+@keyframes successFlashSecondary {
+  0% { border-color: var(--color-primary-border); color: var(--color-primary); }
+  20% { border-color: var(--color-success); color: white; background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%); box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3); }
+  80% { border-color: var(--color-success); color: white; background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%); }
+  100% { border-color: var(--color-primary-border); color: var(--color-primary); background: linear-gradient(135deg, rgba(249, 115, 22, 0.06) 0%, rgba(249, 115, 22, 0.02) 100%); }
+}
+
+/* ======================== 6. 设置控件动效 ======================== */
+.select-control {
+  transition: border-color 0.25s var(--ease-smooth), box-shadow 0.25s var(--ease-smooth);
+}
+
+.select-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  outline: none;
+}
+
+.slider {
+  transition: opacity 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+  transition: transform 0.15s var(--ease-spring), box-shadow 0.15s;
+}
+
+.slider:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2);
+}
+
+/* 质量值标签动画 */
+.quality-value {
+  transition: transform 0.15s var(--ease-spring), color 0.2s;
+}
+
+.slider:active ~ .quality-value {
+  transform: scale(1.15);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* setting-group 显隐动画 */
+.setting-group {
+  transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+}
+
+.quality-container:not([hidden]) {
+  animation: settingReveal 0.35s var(--ease-out-back) forwards;
+}
+
+@keyframes settingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================== 7. 状态消息进出动画 ======================== */
+.status-message.status-slide-in {
+  animation: statusSlideIn 0.35s var(--ease-out-back) forwards;
+}
+
+.status-message.status-slide-out {
+  animation: statusSlideOut 0.3s var(--ease-smooth) forwards;
+}
+
+@keyframes statusSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes statusSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* 成功消息微庆祝 */
+.status-message.success.status-slide-in {
+  animation: statusSuccess 0.5s var(--ease-spring) forwards;
+}
+
+@keyframes statusSuccess {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 错误消息抖动 */
+.status-message.error.status-slide-in {
+  animation: statusError 0.5s var(--ease-smooth) forwards;
+}
+
+@keyframes statusError {
+  0% { opacity: 0; transform: translateX(0); }
+  20% { opacity: 1; transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ======================== 8. 背景氛围 ======================== */
+body {
+  background:
+    linear-gradient(135deg,
+      rgba(249, 115, 22, 0.03) 0%,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(59, 130, 246, 0.02) 100%
+    );
+  background-size: 200% 200%;
+  animation: bgBreathe 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgBreathe {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* ======================== 9. 鼠标跟随光效 ======================== */
+.mouse-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(
+    600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(249, 115, 22, 0.04) 0%,
+    transparent 60%
+  );
+}
+
+/* 触屏设备不显示鼠标光效 */
+@media (hover: none) {
+  .mouse-glow {
+    display: none;
+  }
+}
+
+/* ======================== 10. 语言切换动效 ======================== */
+.language-switcher a {
+  transition: all 0.25s var(--ease-spring);
+}
+
+.language-switcher a.active {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.language-switcher a:active {
+  transform: scale(0.95);
+}
+
+/* ======================== 通用 hover 提升 ======================== */
+.upload-container {
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.upload-container:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--color-primary-subtle);
+}
+
+.settings-container {
+  transition: box-shadow 0.3s var(--ease-smooth);
+}
+
+.image-preview {
+  transition: box-shadow 0.3s var(--ease-smooth);
+}
+
+.image-preview:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ======================== loading spinner 增强 ======================== */
+.loading-indicator:not([hidden]) {
+  animation: loaderFadeIn 0.3s var(--ease-smooth) forwards;
+}
+
+@keyframes loaderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ======================== 减少动画偏好 ======================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .mouse-glow {
+    display: none;
+  }
+
+  body {
+    animation: none;
+  }
+}
+
+/* ======================== 暗色模式适配 ======================== */
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      linear-gradient(135deg,
+        rgba(249, 115, 22, 0.06) 0%,
+        rgba(15, 23, 42, 1) 40%,
+        rgba(59, 130, 246, 0.04) 100%
+      );
+    background-size: 200% 200%;
+  }
+
+  .mouse-glow {
+    background: radial-gradient(
+      600px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(249, 115, 22, 0.07) 0%,
+      transparent 60%
+    );
+  }
+
+  .btn-ripple {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .step.active {
+    box-shadow: var(--shadow-primary), 0 0 0 4px var(--color-primary-glow);
+  }
+
+  .upload-container.drag-over {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(30, 41, 59, 0.9) 100%);
+  }
+
+  .upload-container:hover {
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(249, 115, 22, 0.1);
+  }
+}

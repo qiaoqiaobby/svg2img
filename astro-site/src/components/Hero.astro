@@ -1,0 +1,21 @@
+---
+import LangSwitcher from './LangSwitcher.astro';
+import { t } from '../i18n';
+
+interface Props {
+  lang: 'zh' | 'en';
+}
+
+const { lang } = Astro.props;
+const translations = t(lang);
+---
+
+<header class="animate-entry" style="--entry-order: 0;">
+  <div>
+    <h1>{translations.title}</h1>
+    <p style="color: var(--color-text-secondary); font-size: 0.9375rem; margin-top: 4px;">
+      {translations.heroSubtitle}
+    </p>
+  </div>
+  <LangSwitcher lang={lang} />
+</header>

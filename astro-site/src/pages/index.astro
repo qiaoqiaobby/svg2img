@@ -1,0 +1,17 @@
+---
+// Root page: redirect to language-specific page based on browser language
+// Since this is SSG, we use a client-side JS redirect
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/zh/" />
+  <script is:inline>
+    var lang = (navigator.language || '').startsWith('zh') ? 'zh' : 'en';
+    window.location.replace('/' + lang + '/');
+  </script>
+</head>
+<body></body>
+</html>
