@@ -187,7 +187,8 @@ export function useConverter(t: Translations) {
       image.value = result;
       currentStep.value = 3;
       showStatus(t.previewSuccess, 'success');
-    } catch {
+    } catch (err) {
+      console.error('Preview generation failed:', err);
       showStatus(t.errorConversion, 'error');
     } finally {
       isLoading.value = false;
