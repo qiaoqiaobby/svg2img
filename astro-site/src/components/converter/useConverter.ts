@@ -172,7 +172,7 @@ export function useConverter(t: Translations) {
 
     const loadingTimeout = setTimeout(() => {
       isLoading.value = false;
-    }, 10000);
+    }, 60000);
 
     try {
       const result = await renderSvgToImage({

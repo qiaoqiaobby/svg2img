@@ -92,7 +92,7 @@ export async function renderSvgToImage(options: RenderOptions): Promise<RenderRe
   image.crossOrigin = 'anonymous';
 
   await new Promise<void>((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Image loading timed out')), 5000);
+    const timeout = setTimeout(() => reject(new Error('Image loading timed out')), 30000);
     image.onload = () => { clearTimeout(timeout); resolve(); };
     image.onerror = () => { clearTimeout(timeout); reject(new Error('Failed to load SVG')); };
     image.src = svgDataUrl;
