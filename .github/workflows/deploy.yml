@@ -58,3 +58,20 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy astro-site/dist --project-name=svg2img
+
+      - name: Notify IndexNow
+        if: success()
+        continue-on-error: true
+        run: |
+          curl -s -X POST https://api.indexnow.org/indexnow \
+            -H "Content-Type: application/json" \
+            -d '{
+              "host": "svg2img.shanqiao.app",
+              "key": "${{ secrets.INDEXNOW_KEY }}",
+              "urlList": [
+                "https://svg2img.shanqiao.app/zh/",
+                "https://svg2img.shanqiao.app/en/",
+                "https://svg2img.shanqiao.app/zh/privacy/",
+                "https://svg2img.shanqiao.app/en/privacy/"
+              ]
+            }'

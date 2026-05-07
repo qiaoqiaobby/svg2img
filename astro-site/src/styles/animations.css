@@ -383,7 +383,7 @@ body {
       rgba(59, 130, 246, 0.02) 100%
     );
   background-size: 200% 200%;
-  animation: bgBreathe 12s ease-in-out infinite alternate;
+  animation: bgBreathe 12s ease-in-out 1 alternate;
 }
 
 @keyframes bgBreathe {

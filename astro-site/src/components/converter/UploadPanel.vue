@@ -91,7 +91,7 @@ function onChangeFile(e: MouseEvent) {
   >
     <!-- Upload prompt -->
     <div v-if="!converter.svgFile.value && !converter.showPasteArea.value" class="upload-prompt">
-      <img src="/icons/upload.svg" alt="" class="upload-icon" />
+      <img src="/icons/upload.svg" alt="" class="upload-icon" width="52" height="52" />
       <p>{{ t.dropSvgHere }}</p>
       <input ref="fileInputRef" type="file" accept=".svg" hidden @change="onFileChange" />
       <div class="upload-buttons">

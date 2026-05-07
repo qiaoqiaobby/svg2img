@@ -1,0 +1,101 @@
+---
+import { t } from '../i18n';
+
+interface Props {
+  lang: 'zh' | 'en';
+}
+
+const { lang } = Astro.props;
+const translations = t(lang);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<section class="howto-section animate-entry" style="--entry-order: 3;">
+  <h2>{translations.howToTitle}</h2>
+  <ol class="howto-steps">
+    {translations.howToSteps.map((step, i) => (
+      <li class="howto-step">
+        <span class="step-number">{i + 1}</span>
+        <div>
+          <strong>{step.name}</strong>
+          <p>{step.text}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<!-- JSON-LD: HowTo -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "@id": canonicalUrl.toString() + "#howto",
+  "name": lang === 'zh' ? '如何将 SVG 转换为 PNG / JPG / WebP' : 'How to Convert SVG to PNG / JPG / WebP',
+  "step": translations.howToSteps.map((step, i) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "name": step.name,
+    "text": step.text,
+  })),
+})} />
+
+<style>
+  .howto-section {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .howto-section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .howto-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .howto-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    background: var(--color-background-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .howto-step strong {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+  }
+
+  .howto-step p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

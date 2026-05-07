@@ -62,6 +62,8 @@ function onCopy(e: MouseEvent) {
     <div class="image-preview">
       <img
         :src="converter.image.value.dataUrl"
+        :width="converter.image.value.width"
+        :height="converter.image.value.height"
         alt="Preview"
         class="preview-image"
       />

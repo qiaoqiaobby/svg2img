@@ -5,9 +5,15 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://svg2img.bult.dev',
+  site: 'https://svg2img.shanqiao.app',
   output: 'static',
-  integrations: [vue(), sitemap()],
+  integrations: [
+    vue(),
+    sitemap({
+      filter: (page) => page !== 'https://svg2img.shanqiao.app/',
+      lastmod: new Date(),
+    }),
+  ],
   i18n: {
     defaultLocale: 'zh',
     locales: ['zh', 'en'],

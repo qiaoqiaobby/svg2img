@@ -1,0 +1,33 @@
+# SVG2Img
+
+> Free, privacy-first SVG to PNG/JPG/WebP converter that runs entirely in the browser.
+> No files are uploaded to any server. Supports 1x-3x scaling and adjustable quality.
+
+## Pages
+
+- /zh/ : Chinese interface — upload or paste SVG, choose format and scale, download image
+- /en/ : English interface — same functionality
+- /zh/privacy/ : Privacy policy (Chinese)
+- /en/privacy/ : Privacy policy (English)
+
+## Features
+
+- Convert SVG to PNG (lossless), JPG, or WebP
+- 1x, 1.5x, 2x, 3x scaling for Retina displays
+- Quality adjustment (1-100%) for JPG and WebP
+- Drag-and-drop file upload or paste SVG code directly
+- XSS sanitization: removes script tags and 39+ dangerous event handler attributes
+- Client-side Canvas API rendering — zero server interaction
+- Bilingual: Chinese and English
+
+## Tech Stack
+
+Astro 6 (SSG) + Vue 3 (island architecture) + Cloudflare Pages
+
+## Source Code
+
+https://github.com/qiaoqiaobby/svg2img (MIT License)
+
+## Use Policy
+
+Content may be freely cited for informational and search purposes.

@@ -1,0 +1,86 @@
+---
+import { t } from '../i18n';
+
+interface Props {
+  lang: 'zh' | 'en';
+}
+
+const { lang } = Astro.props;
+const translations = t(lang);
+const headers = translations.formatComparisonHeaders;
+---
+
+<section class="format-section animate-entry" style="--entry-order: 3;">
+  <h2>{translations.formatComparisonTitle}</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>{headers.format}</th>
+          <th>{headers.type}</th>
+          <th>{headers.transparency}</th>
+          <th>{headers.bestFor}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {translations.formatComparison.map((row) => (
+          <tr>
+            <td><strong>{row.format}</strong></td>
+            <td>{row.type}</td>
+            <td>{row.transparency}</td>
+            <td>{row.bestFor}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .format-section {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .format-section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  th {
+    background: var(--color-background-secondary);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td strong {
+    color: var(--color-primary);
+  }
+</style>

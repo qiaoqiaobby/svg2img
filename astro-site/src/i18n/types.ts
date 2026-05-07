@@ -1,10 +1,31 @@
 export interface Translations {
   // Page & SEO
   title: string;
+  seoTitle: string;
+  h1: string;
   metaDescription: string;
   heroSubtitle: string;
+
+  // Content sections
+  featuresTitle: string;
+  features: Array<{ title: string; desc: string }>;
+  howToTitle: string;
+  howToSteps: Array<{ name: string; text: string }>;
+  formatComparisonTitle: string;
+  formatComparison: Array<{ format: string; type: string; transparency: string; bestFor: string }>;
+  formatComparisonHeaders: { format: string; type: string; transparency: string; bestFor: string };
+
+  // FAQ
   faqTitle: string;
   faq: Array<{ q: string; a: string }>;
+
+  // Privacy
+  privacyTitle: string;
+  privacyContent: string;
+
+  // Footer
+  footerPrivacy: string;
+  footerOpenSource: string;
 
   // Steps
   upload: string;

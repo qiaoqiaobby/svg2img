@@ -23,6 +23,7 @@ const translations = t(lang);
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": new URL(Astro.url.pathname, Astro.site).toString() + "#faq",
   "mainEntity": translations.faq.map(item => ({
     "@type": "Question",
     "name": item.q,

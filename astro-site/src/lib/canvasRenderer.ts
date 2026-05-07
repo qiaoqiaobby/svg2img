@@ -110,10 +110,24 @@ export async function renderSvgToImage(options: RenderOptions): Promise<RenderRe
   ctx.fillRect(0, 0, outputWidth, outputHeight);
   ctx.drawImage(image, 0, 0, outputWidth, outputHeight);
 
-  // Export
+  // Export — use toBlob() for async encoding (doesn't block main thread)
   const mimeType = getMimeType(format);
-  const dataUrl = canvas.toDataURL(mimeType, quality);
-  const blob = await fetch(dataUrl).then(res => res.blob());
+  const qualityArg = format === 'png' ? undefined : quality;
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (b) => b ? resolve(b) : reject(new Error('Failed to export canvas')),
+      mimeType,
+      qualityArg,
+    );
+  });
+
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 
   // Release canvas GPU/memory resources
   canvas.width = 0;

@@ -12,6 +12,8 @@ const { lang, title, description } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const zhUrl = new URL('/zh/', Astro.site);
 const enUrl = new URL('/en/', Astro.site);
+const rootUrl = new URL('/', Astro.site);
+const ogImageUrl = new URL('/og-image.png', Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -24,10 +26,12 @@ const enUrl = new URL('/en/', Astro.site);
   <meta name="theme-color" content="#f97316" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="canonical" href={canonicalUrl} />
   <link rel="alternate" hreflang="zh" href={zhUrl} />
   <link rel="alternate" hreflang="en" href={enUrl} />
-  <link rel="alternate" hreflang="x-default" href={enUrl} />
+  <link rel="alternate" hreflang="x-default" href={rootUrl} />
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -36,11 +40,15 @@ const enUrl = new URL('/en/', Astro.site);
   <meta property="og:url" content={canonicalUrl.toString()} />
   <meta property="og:site_name" content="SVG2Img" />
   <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+  <meta property="og:image" content={ogImageUrl.toString()} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl.toString()} />
 
   <!-- Theme: prevent FOUC -->
   <script is:inline>
@@ -56,6 +64,7 @@ const enUrl = new URL('/en/', Astro.site);
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebApplication",
+    "@id": canonicalUrl.toString() + "#app",
     "name": title,
     "description": description,
     "url": canonicalUrl.toString(),
@@ -63,7 +72,33 @@ const enUrl = new URL('/en/', Astro.site);
     "operatingSystem": "Any",
     "browserRequirements": "Requires a modern browser with Canvas API support",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "inLanguage": [lang],
+    "inLanguage": lang === 'zh' ? 'zh-CN' : 'en',
+    "dateModified": new Date().toISOString().split('T')[0],
+    "screenshot": ogImageUrl.toString(),
+    "featureList": [
+      "SVG to PNG conversion",
+      "SVG to JPG conversion",
+      "SVG to WebP conversion",
+      "Client-side processing — no file upload",
+      "1x to 3x scaling",
+      "Quality adjustment for JPG and WebP",
+    ],
+    "creator": {
+      "@type": "Organization",
+      "name": "SVG2Img",
+      "url": rootUrl.toString(),
+      "sameAs": "https://github.com/qiaoqiaobby/svg2img",
+    },
+  })} />
+
+  <!-- JSON-LD: WebSite -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": rootUrl.toString() + "#website",
+    "name": "SVG2Img",
+    "url": rootUrl.toString(),
+    "inLanguage": ["zh-CN", "en"],
   })} />
 </head>
 <body>

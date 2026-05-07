@@ -10,14 +10,14 @@ const { lang } = Astro.props;
 const translations = t(lang);
 ---
 
-<header class="animate-entry" style="--entry-order: 0;">
+<header>
   <div>
-    <h1>{translations.title}</h1>
-    <p style="color: var(--color-text-secondary); font-size: 0.9375rem; margin-top: 4px;">
+    <h1>{translations.h1}</h1>
+    <p class="animate-entry" style="--entry-order: 0; color: var(--color-text-secondary); font-size: 0.9375rem; margin-top: 4px;">
       {translations.heroSubtitle}
     </p>
   </div>
-  <div class="header-controls">
+  <div class="header-controls animate-entry" style="--entry-order: 0;">
     <LangSwitcher lang={lang} />
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
       <!-- Sun icon (shown in dark mode) -->
