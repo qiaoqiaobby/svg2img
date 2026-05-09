@@ -34,6 +34,15 @@ const ogImageUrl = new URL('/og-image.png', Astro.site);
   <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
   <meta name="google-site-verification" content="OqfmYefIKKLwJS-NPkGYt9BzL4KpRFuksUSbkH7-83Y" />
 
+  <!-- Google Analytics (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E8EC2JZWGZ"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E8EC2JZWGZ');
+  </script>
+
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
